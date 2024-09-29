@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BATMAN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif; /* Standard font */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: transparent; /* Fully transparent background */
+            color: black; /* Standard text color */
+            text-align: center;
+        }
+
+        #quiz-container {
+            background-color: transparent; /* Fully transparent container */
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        #logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .answer {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: white; /* Change the answer color to white */
+        }
+
+        #next-button {
+            background-color: white; /* Change background color to white */
+            color: black; /* Change text color to black for visibility */
+            border: 2px solid #ff9900; /* Optional: Add a border for better visibility */
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #next-button:hover {
+            background-color: #ffcc00; /* Change hover color for better effect */
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fadeOut {
+            animation: fadeOut 0.5s forwards;
+        }
+
+        .fadeIn {
+            animation: fadeIn 0.5s forwards;
+        }
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <img id="logo" src="https://i.imgur.com/cyZ0Z21.png" alt="George Michael Logo">
+    <h1>BATMAN</h1>
+    <div id="question-container">
+        <div class="question" id="question">Loading question...</div>
+        <div class="answer" id="answer">Loading answer...</div>
+        <button id="next-button" onclick="nextQuestion()">Next Question</button>
+    </div>
+</div>
+
+<script>
+    // Question and answers data
+    const quizData = [
+        { question: "What is Batman’s real name?", answer: "Bruce Wayne" },
+        { question: "Which city does Batman protect?", answer: "Gotham City" },
+        { question: "Who created the character of Batman?", answer: "Bob Kane and Bill Finger" },
+        { question: "What is the name of Batman’s butler?", answer: "Alfred Pennyworth" },
+        { question: "Which villain is known as the Clown Prince of Crime?", answer: "The Joker" },
+        { question: "Who was the first actor to portray Batman in a live-action movie?", answer: "Lewis Wilson (1943 serial)" },
+        { question: "What is the name of Batman’s crime-fighting partner, also known as the Boy Wonder?", answer: "Robin" },
+        { question: "Which villain broke Batman’s back in the famous comic storyline Knightfall?", answer: "Bane" },
+        { question: "What is the name of Batman’s car?", answer: "The Batmobile" },
+        { question: "Which actress played Catwoman in The Dark Knight Rises (2012)?", answer: "Anne Hathaway" },
+        { question: "Who directed the 1989 Batman movie starring Michael Keaton?", answer: "Tim Burton" },
+        { question: "What is the name of Batman’s secret headquarters?", answer: "The Batcave" },
+        { question: "Which superhero is often referred to as Batman’s best friend and ally in the Justice League?", answer: "Superman" },
+        { question: "Which villain is known for his riddles and puzzles?", answer: "The Riddler" },
+        { question: "Who played Batman in Batman Begins (2005)?", answer: "Christian Bale" },
+        { question: "What is the name of Bruce Wayne’s parents, who were killed in a robbery?", answer: "Thomas and Martha Wayne" },
+        { question: "Which character is both a love interest and adversary to Batman, often portrayed as a cat burglar?", answer: "Catwoman (Selina Kyle)" },
+        { question: "Which Batman villain has a split personality and is obsessed with duality?", answer: "Two-Face (Harvey Dent)" },
+        { question: "What substance is Batman’s armor and gadgets often made from?", answer: "Kevlar" },
+        { question: "Who played the Joker in The Dark Knight (2008)?", answer: "Heath Ledger" },
+        { question: "Which Batman villain uses fear toxins to terrorize Gotham?", answer: "Scarecrow (Dr. Jonathan Crane)" },
+        { question: "What is the name of the psychiatric hospital where Batman’s villains are often imprisoned?", answer: "Arkham Asylum" },
+        { question: "Which actor played Batman in Batman Forever (1995)?", answer: "Val Kilmer" },
+        { question: "Which famous Batman villain is obsessed with plants and environmentalism?", answer: "Poison Ivy" },
+        { question: "What is the name of Batman’s first Robin, who later becomes Nightwing?", answer: "Dick Grayson" },
+        { question: "Which character is the daughter of Batman’s enemy Ra’s al Ghul and has a complex relationship with Bruce Wayne?", answer: "Talia al Ghul" },
+        { question: "In The Dark Knight Rises, which prison does Bruce Wayne escape from?", answer: "The Pit" },
+        { question: "Which villain is known for leaving a trail of clues for Batman to follow, often in the form of puzzles or riddles?", answer: "The Riddler" },
+        { question: "Who is Batman’s main ally in the Gotham City Police Department?", answer: "Commissioner James Gordon" },
+        { question: "Which comic book introduced the character of Batman?", answer: "Detective Comics #27 (1939)" },
+        { question: "Which actress played Harley Quinn in the DC Extended Universe films?", answer: "Margot Robbie" },
+        { question: "What is the name of the group of assassins led by Ra’s al Ghul?", answer: "The League of Shadows (or League of Assassins)" },
+        { question: "Which actor played Bruce Wayne/Batman in Batman v Superman: Dawn of Justice (2016)?", answer: "Ben Affleck" },
+        { question: "What tragic event in Bruce Wayne’s childhood led him to become Batman?", answer: "The murder of his parents" },
+        { question: "Which villain is a former district attorney who becomes disfigured and turns to crime?", answer: "Two-Face" },
+        { question: "What is the name of Batman’s loyal dog in the comics?", answer: "Ace the Bat-Hound" },
+        { question: "Which villain is obsessed with clocks and time-related crimes?", answer: "The Clock King" },
+        { question: "Which Batman villain is a scientist who wears a special suit to survive in freezing temperatures?", answer: "Mr. Freeze (Dr. Victor Fries)" },
+        { question: "What is Batman’s no-kill rule?", answer: "Batman refuses to kill his enemies, preferring to bring them to justice instead." },
+        { question: "Who played Batman in the 1960s TV series Batman?", answer: "Adam West" },
+        { question: "What is the name of Batman’s tech genius who helps create his gadgets and vehicles?", answer: "Lucius Fox" },
+        { question: "Which storyline features the death of Jason Todd, the second Robin?", answer: "A Death in the Family (1988)" },
+        { question: "Which Batman villain was formerly a psychiatrist at Arkham Asylum before becoming a criminal?", answer: "Harley Quinn" },
+        { question: "What is the name of Batman’s son, who also takes on the role of Robin?", answer: "Damian Wayne" },
+        { question: "Which comic book storyline introduced Bane as the villain who defeats Batman?", answer: "Knightfall (1993)" },
+        { question: "Who was the first actor to voice Batman in Batman: The Animated Series?", answer: "Kevin Conroy" },
+        { question: "Which Batman villain is a former professional wrestler who uses a venom serum to enhance his strength?", answer: "Bane" },
+        { question: "Which character is both Batman’s mentor and his adversary, the leader of the League of Shadows?", answer: "Ra’s al Ghul" },
+        { question: "Who directed The Dark Knight Trilogy?", answer: "Christopher Nolan" },
+        { question: "What is the name of the criminal alter ego of Oswald Cobblepot?", answer: "The Penguin" }
+    ];
+
+    let currentQuestionIndex = 0;
+
+    // Shuffle the quiz data
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    // Start the quiz
+    shuffle(quizData);
+    showQuestion();
+
+    function showQuestion() {
+        const questionContainer = document.getElementById("question");
+        const answerContainer = document.getElementById("answer");
+
+        questionContainer.innerText = quizData[currentQuestionIndex].question;
+        answerContainer.innerText = "Loading answer...";
+
+        // Fade in effect
+        answerContainer.classList.remove("fadeIn");
+        answerContainer.classList.add("fadeOut");
+
+        setTimeout(() => {
+            answerContainer.innerText = quizData[currentQuestionIndex].answer;
+            answerContainer.classList.remove("fadeOut");
+            answerContainer.classList.add("fadeIn");
+        }, 500);
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < quizData.length) {
+            showQuestion();
+        } else {
+            const questionContainer = document.getElementById("question");
+            const answerContainer = document.getElementById("answer");
+            questionContainer.innerText = "Thank you for playing!";
+            answerContainer.innerText = "";
+            document.getElementById("next-button").style.display = "none"; // Hide the next button
+        }
+    }
+</script>
+
+</body>
+</html>
